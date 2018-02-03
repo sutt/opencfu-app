@@ -31,7 +31,12 @@ print 'files in data/images/:'
 print 'yours: ', img_name
 print out
 
-#out = subprocess.check_output(["opencfu", "-i", "samples/C.jpg"])
+out = subprocess.check_output(["opencfu", "-i", img_path_name])
+
+print 'results of opencfu:'
+print out
+
+
 #print len(out.split("\n"))
 #print out
 
