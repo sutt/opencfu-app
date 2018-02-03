@@ -1,4 +1,5 @@
 import subprocess, os, sys, time
+from PIL import Image
 
 print os.name
 
@@ -6,11 +7,14 @@ if os.name == 'nt':
 	print 'so windows'
 	
 if os.name == "nt":
+	if len(sys.argv) > 1:
+		print 'long'
 	#out = subprocess.check_output(["arp", "-a"])
 	out = subprocess.check_output("dir", shell=True)
+	sys.exit()
 else:
 	out = subprocess.check_output(["ls", "-l"])
-#print out
+
 
 img_ext = ".jpg"
 img_name = str(time.time())
@@ -33,8 +37,12 @@ print out
 
 def crop_img(img_path_name, temp_img_path_name):
 	
-	im = Image.open("data/samples/C.jpg")
-	im = Image.open(img_path_name)
+	
+	#use any flag to do a demo
+	if len(sys.argv) > 1:
+		im = Image.open("data/samples/C.jpg")
+	else:
+		im = Image.open(img_path_name)
 	print im.size 
 
 	im2 = im.crop((0,0,400,400))
