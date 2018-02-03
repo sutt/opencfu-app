@@ -16,7 +16,12 @@ img_ext = ".jpg"
 img_name = str(time.time())
 img_name += img_ext
 
-out = subprocess.check_output(["raspistill", "-o", img_name, "-v"])
+path_name = "data/images/"
+
+img_path_name = path_name + img_name
+
+
+out = subprocess.check_output(["raspistill", "-o", img_path_name, "-v"])
 
 print 'raspistill output:'
 print out
