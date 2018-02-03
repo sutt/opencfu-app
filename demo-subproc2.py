@@ -31,7 +31,21 @@ print 'files in data/images/:'
 print 'yours: ', img_name
 print out
 
-out = subprocess.check_output(["opencfu", "-i", img_path_name])
+def crop_img(img_path_name, temp_img_path_name):
+	
+	im = Image.open("data/samples/C.jpg")
+	im = Image.open(img_path_name)
+	print im.size 
+
+	im2 = im.crop((0,0,400,400))
+	print im2.size
+	im2.save(temp_img_path_name)
+
+temp_img_path_name = "data/images-tmp/" + img_name
+
+crop_img(img_path_name, temp_img_path_name)
+
+out = subprocess.check_output(["opencfu", "-i", temp_img_path_name])
 
 print 'results of opencfu:'
 print out
