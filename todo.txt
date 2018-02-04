@@ -3,3 +3,43 @@ TODO:
 2/3
 
 Build an annotated image from the data-tablen
+
+2/4
+
+add "wsl" as argument on Dev/Test Zone
+
+analyze time_to_run_cfu() ~ img.size
+
+add liscences and readme
+
+add tests
+
+add assert checks and exception handling
+
+add preview image with sockets
+
+add camera open and focus before capture
+add camera param get/set module
+
+add an html frontend
+	leaflet?
+	mike bostock notebooks?
+
+Takeaways
+
+	nice clean python is:
+		remove the print statements, 
+		remove unnecessary if/elses
+		testing comments
+		nothing needed in ipython
+		terse
+		doesn't do every option conceivable, only whats atomically needed
+		
+	this allows us to "productionize" workspace
+	
+		into utils, main and test
+		it's like cleaning up your workbench each night
+		
+	you know who else did this? Mac Cowell @SF_Tech_Museum
+		get his work?
+		
