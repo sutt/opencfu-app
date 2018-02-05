@@ -8,22 +8,28 @@ PATH_COLONY_DATA = "data/colony-data/"
 PATH_IMG_TMP = "data/images-tmp/"
 
 
-def build_img_path_name(img_ext=".jpg"):
-	img_name = str(time.time())						#TODO - bettr filename
-	img_name += img_ext
-	img_path_name = PATH_IMG + img_name
-	return img_path_name
+def build_fn():
+	fn = str(time.time())						#TODO - bettr filename
+	return fn
 
-def capture_image(img_path_name, b_verbose=False):
-	cmd = ["raspistill", "-o", img_path_name]
+def capture_image(fn, b_verbose=False):
+	path_fn = PATH_IMG + fn
+	cmd = ["raspistill", "-o", path_fn]
 	if b_verbose:
 		cmd.exntend(["-v"])
 	out = subprocess.check_output(cmd)
 	return out
 	
-def load_image(img_path_name):
+def load_image_pil(img_path_name):
 	img = Image.open(img_path_name)
 	return img
+	
+def load_image_cv(img_path_name):
+	img = cv2.imread(img_path_name)
+	return img
+	
+def save_image(img, save_dir, save_fn):
+	img.save(save_Dir + save_fn)
 
 def crop_img(img, b_save_to_tmp = True):
 	img_crop = img.crop((0,0,400,400))
@@ -99,40 +105,59 @@ def display_img(img, mod_=2, b_resize=True):
 	if cv2.waitKey(0) == ord('q'):
 		return True
 		
+
 #TODO - add a way to run an image server locally
 #def run_image_server():
+#	check_for_already_running()	#?
 #	out = subprocess.call(["python" , "-m", "SimpleHTTPServer"])
 #	print out	#so we know what port to connect on
 	
 		
-def main():
+def main(b_display=False):
 	
-	data_fn = "data/colony-data/sample1.csv"
-	img_fn = "data/samples/sample1.jpg"
+	#use fn as id for files in different data directories
+	fn = build_fn()
 	
-	cap_img_fn = build_img_path_name()
-	capture_image(cap_img_fn)
+	# raspitill -> images/fn
+	cap_fn = fn + ".jpg"
+	capture_image(cap_fn)						#TODO - add windows capture
+	cap_img = load_image(cap_fn)
 	
-	cap_img = load_image(cap_img_fn)
+	# images/fn -> images-tmp/fn
+	crop_fn = fn + ".jpg"
+	crop_img = crop_img(cap_img)				#TODO - crop center, resize
+	save_img(crop_img, PATH_IMG_TMP, crop_fn)
 	
-	crop_img = crop_img(cap_img)
-	save_img(crop_img)
+	# images-tmp/fn -> colony-data/fn
+	cfu_input_fn = PATH_IMG_TMP + crop_fn
+	run_opencfu(cfu_iput_fn)					#TODO - return data from output_text
 	
-	#run_opencfu(crop_img_fn)	#TODO add crop_img_fn
-	
+	# colony-data/fn -> d
+	data_fn = fn + ".csv"
 	d = import_data(data_fn)
 	
-	img_cv = cv2.imread(img_fn)
+	# images-tmp/fn -> img_cv
+	img_cv = load_image_cv(PATH_IMG_TMP + crop_fn)
 	
+	# d, img_cv -> image-annotate/fn
 	x, y, radius = d['X'], d['Y'], d['Radius']	
 	drawn_img = draw_colonies(img_cv, x, y, radius, max_colonies=0)
+	drawn_fn = fn + ".jpg"
+	save_img(drawn_img, PATH_ANNOTATE, drawn_fn)
 	
-	display_img(drawn_img)
+	#images-annotate/ -> user
+	#run_image_server()
+	if b_display:
+		display_img(drawn_img)
 	
 	print 'exiting main'
 	
 
 if __name__ == "__main__":
-	main()
+	
+	if os.name == "nt":
+		main(b_display=True)
+	else:
+		main(b_display=False)	#headless rpi
 	
 	

@@ -10,6 +10,9 @@ add "wsl" as argument on Dev/Test Zone
 
 analyze time_to_run_cfu() ~ img.size
 
+add a windows version to use laptop as tablet
+	use cv2.capture(1) for back camera
+
 add liscences and readme
 
 add tests
@@ -17,6 +20,9 @@ add tests
 add assert checks and exception handling
 
 add preview image with sockets
+
+add a way to reapply the run_opencfu with new params
+	get/set opencfu params
 
 add camera open and focus before capture
 add camera param get/set module
