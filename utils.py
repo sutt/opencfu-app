@@ -94,10 +94,10 @@ def import_data(data_fn):
 	
 	#all data is an int or float,
 	#use type in first row, as type for whole column
+	#actually it looks like this doesnt work, make everything a float for now
 	data_type = map(lambda x: is_float(x), data_type)
-	print 'DATA TYPES:'
-	print data_type
-	print data[0]
+	data_type = [True] * len(data_key)
+
 	d = {}
 	for i_k,k in enumerate(data_key):
 		d[k] = []
@@ -183,8 +183,10 @@ def main(b_display=False, b_windows=False):
 	
 	# d, img_cv -> images-annotate/fn
 	x, y, radius = d['X'], d['Y'], d['Radius']	
-	print x
-	print y
+	x = map(lambda elem: int(elem), x)
+	y = map(lambda elem: int(elem), y)
+	radius = map(lambda elem: int(elem), radius)
+	
 	drawn_img = draw_colonies(img_cv, x, y, radius, max_colonies=0)
 	drawn_fn = fn + ".jpg"
 	save_image_cv(drawn_img, PATH_ANNOTATE, drawn_fn)

@@ -60,8 +60,13 @@ Takeaways
 		into utils, main and test
 		it's like cleaning up your workbench each night
 		
-	you know who else did this? Mac Cowell @SF_Tech_Museum
-	
-	
+	you know who else did this? Mac Cowell @SF_Tech_Museum	
 		get his work?
+		
+	This is a cool pattern for building raspberry pi apps on your windows machine
+		use wsl to call linux apps
+		use opencv to simulate rpi camera
+		
+	
+	
 		
