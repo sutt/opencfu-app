@@ -35,6 +35,16 @@ add an html frontend
 
 add wsl to arguments on run_opencfu
 
+2/6
+
+cleanup scratch work, using a branch
+
+deploy to raspberry pi
+
+add img param size
+
+long term: build "orinetation-registration" based on previous colonies recorded.
+
 Takeaways
 
 	nice clean python is:
@@ -51,5 +61,7 @@ Takeaways
 		it's like cleaning up your workbench each night
 		
 	you know who else did this? Mac Cowell @SF_Tech_Museum
+	
+	
 		get his work?
 		
