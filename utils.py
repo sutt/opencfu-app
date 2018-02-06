@@ -24,7 +24,6 @@ def capture_image_pi(fn, b_verbose=False):
 	
 def capture_image_cv(cam_enum = CAM_CV_ENUM, b_verbose=False):
 	vc = cv2.VideoCapture(cam_enum)
-	print 'capturing'
 	tries = 0
 	while(vc.isOpened()):
 		tries += 1
@@ -32,15 +31,16 @@ def capture_image_cv(cam_enum = CAM_CV_ENUM, b_verbose=False):
 			ret,frame = vc.read()
 		except:
 			print 'unable to read from cam try: ', str(tries)
-		if ret or (tries > 10):
-			print 'breaking'
-			print frame.shape
+		if ret:
+			return frame
+		if tries > 10:
+			print 'after 10 tries, failed to capture'
+			vc.release()
 			break
 	return frame
 	
 def load_image_pil(img_path_name):
 	img = Image.open(img_path_name)
-	print img.size
 	return img
 	
 def load_image_cv(img_path_name):
@@ -55,16 +55,12 @@ def save_image_cv(img, save_dir, save_fn):
 
 def crop_img(img, b_save_to_tmp = True):
 	img_crop = img.crop((0,0,400,400))
-	print img.size
-	
 	if b_save_to_tmp:
 		tmp_img_fn = PATH_IMG_TMP + "tmp.jpg"		#TODO - remove hard-code path
 		img_crop.save(tmp_img_fn)		
-	print img_crop.size
 	return img_crop
 	
 def run_opencfu(input_img_path_name, fn, b_windows=False, b_filesystem=True):
-	time.sleep(1)
 	cmd = ["opencfu", "-i", input_img_path_name]
 	if b_windows:
 		wsl_path = "c:/windows/SysNative/wsl.exe"
@@ -73,7 +69,6 @@ def run_opencfu(input_img_path_name, fn, b_windows=False, b_filesystem=True):
 		path_to_colony_data = PATH_COLONY_DATA + fn + ".csv"
 		cmd.extend([">", path_to_colony_data])	#pipe to data/colony-data/
 	output_text = subprocess.check_output(cmd, shell=False)
-	#time.sleep(2)	#allow the piped file to get written
 	return output_text
 
 def is_float(x):
@@ -154,7 +149,7 @@ def main(b_display=False, b_windows=False):
 	
 	#use fn as id for files in different data directories
 	fn = build_fn()
-	print fn
+	print 'fn: ', str(fn)
 	
 	# raspitill -> images/fn
 	cap_fn = fn + ".jpg"
