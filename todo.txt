@@ -30,6 +30,10 @@ add camera param get/set module
 add an html frontend
 	leaflet?
 	mike bostock notebooks?
+	
+2/5
+
+add wsl to arguments on run_opencfu
 
 Takeaways
 
