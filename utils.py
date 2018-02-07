@@ -23,7 +23,12 @@ def capture_image_pi(fn, b_verbose=False):
 	return out
 	
 def capture_image_cv(cam_enum = CAM_CV_ENUM, b_verbose=False):
-	vc = cv2.VideoCapture(cam_enum)
+	try:
+		vc = cv2.VideoCapture(cam_enum)
+	except:
+		print 'failed to create a VideoCapture. breaking...'
+		return False
+	try:
 	tries = 0
 	while(vc.isOpened()):
 		tries += 1
@@ -54,7 +59,7 @@ def save_image_cv(img, save_dir, save_fn):
 	cv2.imwrite(save_dir + save_fn, img)
 
 def crop_img(img, b_save_to_tmp = True):
-	img_crop = img.crop((0,0,400,400))
+	img_crop = img.crop((0,0,600,400))
 	if b_save_to_tmp:
 		tmp_img_fn = PATH_IMG_TMP + "tmp.jpg"		#TODO - remove hard-code path
 		img_crop.save(tmp_img_fn)		
@@ -76,12 +81,16 @@ def is_float(x):
 
 def import_data(data_fn):
 	
+	#TODO - split this top section off into import_file vs parse_text_output
 	f = open(data_fn, 'r')
 	lines = f.readlines()
 	f.close()
 	
 	lines = map(lambda x: x.replace("\n", ""),lines)
 	lines = map(lambda x: x.split(','), lines)
+	
+	if len(lines) <= 1:					#TODO - better no-colonies-found check
+		return {}
 	
 	data_key = lines[0]
 	data_type = lines[1]
@@ -90,7 +99,7 @@ def import_data(data_fn):
 	#all data is an int or float,
 	#use type in first row, as type for whole column
 	#actually it looks like this doesnt work, make everything a float for now
-	data_type = map(lambda x: is_float(x), data_type)
+	#data_type = map(lambda x: is_float(x), data_type)
 	data_type = [True] * len(data_key)
 
 	d = {}
@@ -158,7 +167,7 @@ def main(b_display=False, b_windows=False):
 		save_image_cv(cap_img_cv, PATH_IMG, cap_fn)
 	else:
 		capture_image_pi(cap_fn)	
-	cap_img = load_image_pil(PATH_IMG + cap_fn)
+	cap_img = load_image_pil(PATH_IMG + cap_fn)		#TODO - cv-cap -> pil-import - bad?
 	
 	# images/fn -> images-tmp/fn
 	crop_fn = fn + ".jpg"
@@ -189,7 +198,7 @@ def main(b_display=False, b_windows=False):
 	#images-annotate/ -> user
 	#run_image_server()
 	if b_display:
-		display_img(drawn_img)
+		display_img(drawn_img, b_resize=False)
 	
 	print 'exiting main'
 	
