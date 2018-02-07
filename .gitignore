@@ -1,4 +1,7 @@
 *.ipynb
 .ipynb_checkpoints/
-*.jpg
-*.csv
+data/images/
+data/colony-data/
+data/images-annotate/
+data/images-tmp/
+
